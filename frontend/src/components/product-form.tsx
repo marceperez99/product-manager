@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Container,
   FormControlLabel,
   FormGroup,
   Grid,
@@ -20,7 +19,7 @@ import useCategories from "../hooks/useCategories";
 type IProductForm = {
   name: string;
   available: boolean;
-  categories: string[];
+  categories: number[];
   images: { id?: string; image: string }[];
 };
 interface ProductFormProps {
@@ -71,11 +70,11 @@ const ProductForm = ({
         <Grid item xs={6} my={3}>
           <MultipleSelect
             title="Categories"
-            values={values.categories}
+            values={values.categories.map((o) => `${o}`)}
             setValues={(values) => setFieldValue("categories", values)}
             options={
               categories?.results.map((category) => ({
-                id: category.id,
+                id: `${category.id}`,
                 value: category.name,
               })) || []
             }

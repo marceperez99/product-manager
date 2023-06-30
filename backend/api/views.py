@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets, mixins, status, permissions
-from .serializers import UserSerializer, RegisterUserSerializer, ProductSerializer, CategorySerializer
+from .serializers import UserSerializer, RegisterUserSerializer, ProductSerializer, CategorySerializer, ReadProductSerializer
 from rest_framework.response import Response
 from .models import Product, Category
 
@@ -37,15 +37,11 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 
-    # def get_serializer_class(self):    
-    #     if self.action in ["retrieve", "list"]:
-    #         return ViewProductSerializer
-    #     return self.serializer_class
+    def get_serializer_class(self):    
+        if self.action in ["retrieve", "list"]:
+            return ReadProductSerializer
+        return self.serializer_class
 
-    def update(self, request, *args, **kwargs):
-        serializer = ProductSerializer(data=request.data)
-        print(serializer.is_valid(), serializer.data)
-        # return super().create(request, *args, **kwargs)
 
 
 class CategoryViewSet(

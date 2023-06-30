@@ -28,12 +28,6 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name'] 
 
-    def to_internal_value(self, data):
-        
-        value = super().to_internal_value(data)
-        print(data,'->', value)
-        return value
-
 class ProductPictureSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=False)
     class Meta:
@@ -50,7 +44,7 @@ class ProductPictureSerializer(serializers.ModelSerializer):
             return super(ProductPictureSerializer, self).to_internal_value(data)
 
 class ProductSerializer(serializers.ModelSerializer):
-    categories = CategorySerializer(many=True, read_only=True)
+    
     images = ProductPictureSerializer(many=True, required=False)
 
     class Meta:
@@ -68,8 +62,8 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
 
     def update(self, instance, validated_data):
-        pictures_data = validated_data.pop('images', [])
         
+        pictures_data = validated_data.pop('images', [])
         ids = set([pic.get('id', None) for pic in pictures_data])
         
         ProductPicture.objects.filter(product=instance).exclude(id__in=ids).delete()   
@@ -79,3 +73,7 @@ class ProductSerializer(serializers.ModelSerializer):
                 ProductPicture.objects.create(product=instance, **picture)
 
         return super().update(instance, validated_data)
+    
+
+class ReadProductSerializer(ProductSerializer):
+    categories = CategorySerializer(many=True, read_only=True)

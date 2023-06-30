@@ -108,7 +108,7 @@ const EditProduct = () => {
             initialValues={{
               name: data.name,
               available: data.available,
-              categories: [],
+              categories: data.categories.map((c) => c.id),
               images: data.images,
             }}
             saveButtonLabel="Edit Product"
