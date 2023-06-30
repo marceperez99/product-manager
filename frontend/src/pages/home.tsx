@@ -59,6 +59,7 @@ const Home = () => {
       getNextPageParam: (lastPage) => lastPage.next,
     }
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdateName = useCallback(
     _.debounce(
       (e: any) => setFilters((prev) => ({ ...prev, name: e.target.value })),
