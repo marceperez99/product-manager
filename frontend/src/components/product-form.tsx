@@ -40,19 +40,30 @@ const ProductForm = ({
   const { data: categories } = useCategories();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { values, handleChange, setFieldValue, handleSubmit, setValues } =
-    useFormik<IProductForm>({
-      initialValues,
-      enableReinitialize: true,
-      onSubmit: async (submittedValues) => {
-        try {
-          await onSubmit(submittedValues);
-        } catch (error: any) {
-          const errorMessage = error?.response?.data?.detail;
-          enqueueSnackbar(errorMessage, { variant: "error" });
-        }
-      },
-    });
+  const {
+    values,
+    handleChange,
+    setFieldValue,
+    handleSubmit,
+    setValues,
+    handleBlur,
+    errors,
+    touched,
+  } = useFormik<IProductForm>({
+    initialValues,
+    enableReinitialize: true,
+    onSubmit: async (submittedValues, { setErrors }) => {
+      try {
+        await onSubmit(submittedValues);
+      } catch (error: any) {
+        const errors = error?.response?.data;
+        setErrors(errors);
+        enqueueSnackbar(errors?.detail || "Error while updating product", {
+          variant: "error",
+        });
+      }
+    },
+  });
   console.log(values);
 
   return (
@@ -64,6 +75,9 @@ const ProductForm = ({
             label="Product Name"
             value={values.name}
             onChange={handleChange("name")}
+            onBlur={handleBlur("name")}
+            error={touched.name && !!errors.name}
+            helperText={touched.name ? errors.name : ""}
           />
         </Grid>
         <Grid item xs={6} />
@@ -71,6 +85,7 @@ const ProductForm = ({
           <MultipleSelect
             title="Categories"
             values={values.categories.map((o) => `${o}`)}
+            error={touched.categories ? errors.categories || "" : ""}
             setValues={(values) => setFieldValue("categories", values)}
             options={
               categories?.results.map((category) => ({

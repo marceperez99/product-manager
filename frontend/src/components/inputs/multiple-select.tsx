@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import { FormControl, InputLabel } from "@mui/material";
+import { FormControl, FormHelperText, InputLabel } from "@mui/material";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -36,12 +36,14 @@ function getStyles(
 type MultipleSelectProps = {
   values: string[];
   title: string;
+  error?: string | string[];
   options: { id: string | number; value: string }[];
   setValues: (v: string | string[]) => void;
 };
 
 export default function MultipleSelect({
   values,
+  error,
   options,
   setValues,
   title,
@@ -65,6 +67,7 @@ export default function MultipleSelect({
         fullWidth
         labelId="multiple-chip-label"
         multiple
+        error={!!error}
         value={values}
         onChange={handleChange}
         input={<OutlinedInput id="select-multiple-chip" label={title} />}
@@ -86,6 +89,7 @@ export default function MultipleSelect({
           </MenuItem>
         ))}
       </Select>
+      {error && <FormHelperText>{error}</FormHelperText>}
     </FormControl>
   );
 }

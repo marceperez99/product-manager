@@ -30,7 +30,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           />
         </Typography>
       </Grid>
-      <Grid item xs={12} textAlign="center">
+      <Grid item xs={12} textAlign="center" mt={1}>
         {product.categories?.map((category) => (
           <Chip
             size="small"
